@@ -45,7 +45,7 @@ export default {
 
                     if (resp['status_code'] === 201) {
                         this.isLoading = false
-                        // window.location.href = '/signin'
+                        window.location.href = '/signin'
                     }
                 }
             } catch (err) {
