@@ -28,7 +28,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/auth/SignInView.vue')
+            component: () => import('../views/auth/SignInView.vue'),
+            meta: {
+                requiresAuth: false // Add meta field to indicate protected route
+            }
         },
         {
             path: '/reset-password',
@@ -36,7 +39,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/auth/ResetPasswordView.vue')
+            component: () => import('../views/auth/ResetPasswordView.vue'),
+            meta: {
+                requiresAuth: false // Add meta field to indicate protected route
+            }
         },
         {
             path: '/signup',
@@ -44,7 +50,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/auth/SignUpView.vue')
+            component: () => import('../views/auth/SignUpView.vue'),
+            meta: {
+                requiresAuth: false // Add meta field to indicate protected route
+            }
         },
         {
             path: '/registered-vehicle',
@@ -52,7 +61,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/RegisteredVehiclesView.vue')
+            component: () => import('../views/admin/RegisteredVehiclesView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/emergency-contacts',
@@ -60,7 +72,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/EmergencyContactsView.vue')
+            component: () => import('../views/admin/EmergencyContactsView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/rescuers-contacts',
@@ -68,7 +83,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/RescuersContactsView.vue')
+            component: () => import('../views/admin/RescuersContactsView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/activity-history',
@@ -76,7 +94,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/ActivityHistoryView.vue')
+            component: () => import('../views/admin/ActivityHistoryView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/users',
@@ -84,7 +105,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/UsersView.vue')
+            component: () => import('../views/admin/UsersView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/dashboard',
@@ -92,7 +116,10 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/DashboardView.vue')
+            component: () => import('../views/admin/DashboardView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         },
         {
             path: '/alert/:id',
@@ -100,11 +127,15 @@ const router = createRouter({
             // route level code-splitting
             // this generates a separate chunk (About.[hash].js) for this route
             // which is lazy-loaded when the route is visited.
-            component: () => import('../views/admin/DetailAccidentAlertView.vue')
+            component: () => import('../views/admin/DetailAccidentAlertView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         }
     ]
 })
 router.beforeEach(async (to, from, next) => {
+    console.log(to.meta.requiresAuth)
     if (to.meta.requiresAuth) {
         const access_token = localStorage.getItem('access_token')
         const refresh_token = localStorage.getItem('refresh_token')

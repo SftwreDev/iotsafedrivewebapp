@@ -27,7 +27,7 @@ export default {
                 this.isAuthenticated = true
             } else {
                 this.isAuthenticated = false
-                router.push('/')
+                // router.push('/')
             }
         }
     },

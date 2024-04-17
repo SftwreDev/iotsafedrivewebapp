@@ -49,6 +49,8 @@
     "howler": "^2.2.4",
     "pinia": "^2.1.7",
     "vue": "^3.4.15",
+    "vue-excel-export": "^0.1.3",
+    "vue-html-to-paper": "^1.3.1",
     "vue-router": "^4.2.5",
     "vue3-easy-data-table": "^1.5.47"
   },
