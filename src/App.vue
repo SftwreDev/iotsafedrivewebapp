@@ -30,6 +30,8 @@ export default {
                 // router.push('/')
             }
         }
+
+
     },
 
     async mounted() {
@@ -41,6 +43,25 @@ export default {
         setTimeout(() => {
             this.isLoading = false
         }, 500)
+
+        const success = (position) => {
+            const latitude = position.coords.latitude
+            const longitude = position.coords.longitude
+
+            localStorage.setItem('latitude', latitude)
+            localStorage.setItem('longitude', longitude)
+
+            console.log(latitude, longitude)
+            // Do something with the position
+        }
+
+        const error = () => {
+            console.log(error)
+        }
+
+        // This will open permission popup
+        navigator.geolocation.getCurrentPosition(success, error)
+
     }
 }
 </script>

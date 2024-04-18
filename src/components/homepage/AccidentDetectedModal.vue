@@ -81,17 +81,17 @@ export default {
             }
 
             if (this.latitude !== '0.0' || this.longitude !== '0.0') {
-                payload.latitude = this.latitude
-                payload.longitude = this.longitude
+                payload.latitude = `${this.latitude}`
+                payload.longitude = `${this.longitude}`
             } else {
-                payload.latitude = deviceLatitude
-                payload.longitude = deviceLongitude
+                payload.latitude = `${deviceLatitude}`
+                payload.longitude = `${deviceLongitude}`
             }
 
-            console.log(payload)
+            console.log('payload', payload)
             try {
                 const resp = await apiSendSMS(payload)
-
+                console.log('Respo', resp)
                 if (resp['status_code'] === 200) {
 
                     window.location.href = `/`
