@@ -110,7 +110,7 @@ export default {
                 // Change the text content of the div
                 myDiv.textContent = 'Sending sms notification now...'
 
-                // await this.sendSMS(false)
+                await this.sendSMS(false)
             }
         }
     },
