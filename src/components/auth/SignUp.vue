@@ -63,6 +63,17 @@ export default {
             } else {
                 this.isPasswordMatch = false
             }
+        },
+        show_password() {
+            var new_password = document.getElementById('new_password')
+            var confirm_password = document.getElementById('confirm_password')
+            if (new_password.type === 'password' && confirm_password.type === 'password') {
+                new_password.type = 'text'
+                confirm_password.type = 'text'
+            } else {
+                new_password.type = 'password'
+                confirm_password.type = 'password'
+            }
         }
     },
 
@@ -296,10 +307,11 @@ async function apiSignUp(payload) {
                     <div class="flex items-center justify-between">
                         <div class="flex items-center">
                             <input
-                                id="remember-me"
+                                id="show_password"
                                 class="h-4 w-4 rounded border-gray-300 text-custom-bg-600 focus:ring-custom-bg-600"
-                                name="remember-me"
+                                name="show_password"
                                 type="checkbox"
+                                @click="show_password"
                             />
                             <label
                                 class="ml-3 block text-sm leading-6 text-gray-900"

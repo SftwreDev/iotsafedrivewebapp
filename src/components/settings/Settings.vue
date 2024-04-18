@@ -23,14 +23,17 @@ export default {
             year_model: '',
             plate_no: '',
 
+            trusted_contact_id_1: '',
             trusted_contact_name_1: '',
             trusted_contact_address_1: '',
             trusted_contact_contact_1: '',
 
+            trusted_contact_id_2: '',
             trusted_contact_name_2: '',
             trusted_contact_address_2: '',
             trusted_contact_contact_2: '',
 
+            trusted_contact_id_3: '',
             trusted_contact_name_3: '',
             trusted_contact_address_3: '',
             trusted_contact_contact_3: '',
@@ -109,16 +112,19 @@ export default {
             const access_token = localStorage.getItem('access_token')
             const payload = [
                 {
+                    id: this.trusted_contact_id_1,
                     name: this.trusted_contact_name_1,
                     address: this.trusted_contact_address_1,
                     contact: this.trusted_contact_contact_1
                 },
                 {
+                    id: this.trusted_contact_id_2,
                     name: this.trusted_contact_name_2,
                     address: this.trusted_contact_address_2,
                     contact: this.trusted_contact_contact_2
                 },
                 {
+                    id: this.trusted_contact_id_3,
                     name: this.trusted_contact_name_3,
                     address: this.trusted_contact_address_3,
                     contact: this.trusted_contact_contact_3
@@ -185,14 +191,17 @@ export default {
         trusted_contacts: {
             handler(newValue) {
                 if (newValue.length > 0) {
+                    this.trusted_contact_id_1 = newValue[0].id || ''
                     this.trusted_contact_name_1 = newValue[0].name || ''
                     this.trusted_contact_address_1 = newValue[0].address || ''
                     this.trusted_contact_contact_1 = newValue[0].contact || ''
 
+                    this.trusted_contact_id_2 = newValue[1].id || ''
                     this.trusted_contact_name_2 = newValue[1].name || ''
                     this.trusted_contact_address_2 = newValue[1].address || ''
                     this.trusted_contact_contact_2 = newValue[1].contact || ''
 
+                    this.trusted_contact_id_3 = newValue[2].id || ''
                     this.trusted_contact_name_3 = newValue[2].name || ''
                     this.trusted_contact_address_3 = newValue[2].address || ''
                     this.trusted_contact_contact_3 = newValue[2].contact || ''
@@ -666,6 +675,8 @@ async function apiUpdateTrustedContacts(payload, access_token) {
                                 <div class="mt-6 flex flex-col lg:flex-row">
                                     <div class="flex-grow space-y-6">
                                         <p>Trusted Contacts 1</p>
+
+                                        <input v-model="trusted_contact_id_1" class="hidden" />
                                         <div
                                             class="mt-6 grid grid-cols-3 gap-6">
                                             <div>
@@ -705,6 +716,8 @@ async function apiUpdateTrustedContacts(payload, access_token) {
                                         </div>
 
                                         <p>Trusted Contacts 2</p>
+
+                                        <input v-model="trusted_contact_id_2" class="hidden" />
                                         <div
                                             class="mt-6 grid grid-cols-3 gap-6">
                                             <div>
@@ -744,6 +757,8 @@ async function apiUpdateTrustedContacts(payload, access_token) {
                                         </div>
 
                                         <p>Trusted Contacts 3</p>
+
+                                        <input v-model="trusted_contact_id_3" class="hidden" />
                                         <div
                                             class="mt-6 grid grid-cols-3 gap-6">
                                             <div>
@@ -793,6 +808,7 @@ async function apiUpdateTrustedContacts(payload, access_token) {
                                 <div class="mt-4 flex justify-end gap-x-3 px-4 py-4 sm:px-6">
                                     <button
                                         class="flex gap-x-2 inline-flex justify-center rounded-md bg-custom-bg-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-custom-bg-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-custom-bg-600"
+                                        @click="updateTrustedContacts"
                                     >
                                         <div v-if="isLoading" class="spinner"></div>
                                         <span v-if="!isLoading">Save</span>

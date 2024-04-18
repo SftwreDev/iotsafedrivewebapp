@@ -31,7 +31,7 @@ export default {
     methods: {
         changeTab(tab) {
             console.log(this.userProfile[0]?.brand != '')
-            if (this.userProfile[0]?.brand != '') {
+            if (this.userProfile[0]?.brand !== '') {
                 this.tabContent = 'stage3'
 
             } else {
@@ -64,6 +64,7 @@ export default {
                     if (resp.status_code === 201) {
                         this.isLoading = false
                         // window.location.href = '/'
+                        this.changeTab('stage3')
                     }
                 } else {
                     this.isLoading = false

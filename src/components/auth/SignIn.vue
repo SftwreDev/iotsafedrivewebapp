@@ -58,6 +58,14 @@ export default {
             } catch (err) {
                 console.error('Error creating account:', err)
             }
+        },
+        show_password() {
+            var password = document.getElementById('password')
+            if (password.type === 'password') {
+                password.type = 'text'
+            } else {
+                password.type = 'password'
+            }
         }
     },
 
@@ -136,11 +144,12 @@ async function apiSignIn(payload) {
                                 class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                                 name="remember-me"
                                 type="checkbox"
+                                @click="show_password"
                             />
                             <label
                                 class="ml-3 block text-sm leading-6 text-gray-900"
                                 for="remember-me"
-                            >Remember me</label
+                            >Show password</label
                             >
                         </div>
 
