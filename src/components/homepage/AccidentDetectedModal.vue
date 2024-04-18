@@ -78,10 +78,10 @@ export default {
         async sendSMS(false_alarm) {
             const payload = {
                 is_false_alarm: !!false_alarm,
-                latitude: deviceLatitude,
-                longitude: deviceLongitude
+                lat: deviceLatitude,
+                lng: deviceLongitude
             }
-            
+
             try {
                 const resp = await apiSendSMS(payload)
                 console.log('Respo', resp)
