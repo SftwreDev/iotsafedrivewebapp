@@ -61,7 +61,7 @@ export default {
                     this.latitude = data.data[0].latitude
                     this.longitude = data.data[0].longitude
 
-                    if (this.latitude !== '' || this.longitude !== '') {
+                    if (this.latitude !== '0.0' || this.longitude !== '0.0') {
                         this.center = { lat: this.latitude, lng: this.longitude }
                     } else {
 
