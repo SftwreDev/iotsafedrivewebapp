@@ -64,7 +64,6 @@ export default {
                     if (this.latitude !== '0.0' || this.longitude !== '0.0') {
                         this.center = { lat: this.latitude, lng: this.longitude }
                     } else {
-
                         this.center = { lat: deviceLatitude, lng: deviceLongitude }
                     }
                     this.isAccidentDetected = true
@@ -81,7 +80,7 @@ export default {
                 is_false_alarm: !!false_alarm
             }
 
-            if (this.latitude !== '' || this.longitude !== '') {
+            if (this.latitude !== '0.0' || this.longitude !== '0.0') {
                 payload.latitude = this.latitude
                 payload.longitude = this.longitude
             } else {
