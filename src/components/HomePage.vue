@@ -10,27 +10,33 @@ export default {
     methods: {
         changeTab(tab) {
             this.tabContent = tab
+        },
+        getDeviceLocation() {
+            const success = (position) => {
+                const latitude = position.coords.latitude
+                const longitude = position.coords.longitude
+
+                localStorage.setItem('latitude', latitude)
+                localStorage.setItem('longitude', longitude)
+
+                console.log(latitude, longitude)
+                // Do something with the position
+            }
+
+            const error = () => {
+                console.log(error)
+            }
+
+            // This will open permission popup
+            navigator.geolocation.getCurrentPosition(success, error)
         }
     },
     mounted() {
+        this.getDeviceLocation()
     },
     created() {
 
-        const success = (position) => {
-            const latitude = position.coords.latitude
-            const longitude = position.coords.longitude
 
-            localStorage.setItem('latitude', latitude)
-            localStorage.setItem('longitude', longitude)
-            // Do something with the position
-        }
-
-        const error = () => {
-            console.log(error)
-        }
-
-        // This will open permission popup
-        navigator.geolocation.getCurrentPosition(success, error)
     }
 }
 </script>
