@@ -665,16 +665,16 @@ async function apiUpdateTrustedContacts(payload, access_token) {
 
                                 <div class="mt-6 flex flex-col lg:flex-row">
                                     <div class="flex-grow space-y-6">
-
-                                        <div v-for="(items, index) in trusted_contacts" :key="items.id"
-                                             class="mt-6 grid grid-cols-3 gap-6">
+                                        <p>Trusted Contacts 1</p>
+                                        <div
+                                            class="mt-6 grid grid-cols-3 gap-6">
                                             <div>
                                                 <label class="block text-sm font-medium leading-6 text-gray-900"
                                                        for="trusted_contact_name_1">
                                                     Name
                                                 </label>
                                                 <input id="trusted_contact_name_1"
-                                                       v-model='trusted_contact_name'
+                                                       v-model='trusted_contact_name_1'
                                                        class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
                                                        name="trusted_contact_name_1" />
                                             </div>
@@ -700,6 +700,84 @@ async function apiUpdateTrustedContacts(payload, access_token) {
                                                        v-model="trusted_contact_contact_1"
                                                        class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
                                                        name="trusted_contact_contact_1"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <p>Trusted Contacts 2</p>
+                                        <div
+                                            class="mt-6 grid grid-cols-3 gap-6">
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_name_2">
+                                                    Name
+                                                </label>
+                                                <input id="trusted_contact_name_2"
+                                                       v-model='trusted_contact_name_2'
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_name_2" />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_address_2">
+                                                    Address
+                                                </label>
+                                                <input id="trusted_contact_address_2"
+                                                       v-model="trusted_contact_address_2"
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_address_2"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_contact_2">
+                                                    Contact
+                                                </label>
+                                                <input id="trusted_contact_contact_2"
+                                                       v-model="trusted_contact_contact_2"
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_contact_2"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <p>Trusted Contacts 3</p>
+                                        <div
+                                            class="mt-6 grid grid-cols-3 gap-6">
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_name_3">
+                                                    Name
+                                                </label>
+                                                <input id="trusted_contact_name_3"
+                                                       v-model='trusted_contact_name_3'
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_name_3" />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_address_3">
+                                                    Address
+                                                </label>
+                                                <input id="trusted_contact_address_3"
+                                                       v-model="trusted_contact_address_3"
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_address_3"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <label class="block text-sm font-medium leading-6 text-gray-900"
+                                                       for="trusted_contact_contact_3">
+                                                    Contact
+                                                </label>
+                                                <input id="trusted_contact_contact_3"
+                                                       v-model="trusted_contact_contact_3"
+                                                       class="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
+                                                       name="trusted_contact_contact_3"
                                                 />
                                             </div>
                                         </div>
