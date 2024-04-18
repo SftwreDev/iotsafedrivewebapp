@@ -361,7 +361,7 @@ export default {
         </div>
         <!-- Main column -->
         <div class="flex flex-col lg:pl-64">
-            
+
             <main class="flex-1">
                 <!-- Page title & actions -->
                 <slot></slot>
@@ -429,7 +429,7 @@ const admin_navigation = [
         current: lastSegmentPath === 'rescuers-contacts'
     },
     {
-        name: 'Accident History',
+        name: 'Activity History',
         href: '/activity-history',
         icon: ExclamationTriangleIcon,
         current: lastSegmentPath === 'activity-history'
