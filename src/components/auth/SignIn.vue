@@ -25,6 +25,7 @@ export default {
                 const resp = await apiSignIn(payload)
 
                 if (resp['status_code'] === 200) {
+                    localStorage.clear()
                     const access_token = resp['data'][0]['access_token']
                     const refresh_token = resp['data'][0]['refresh_token']
                     const first_name = resp['data'][0]['first_name']
