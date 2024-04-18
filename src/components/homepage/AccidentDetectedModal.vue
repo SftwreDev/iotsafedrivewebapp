@@ -88,6 +88,8 @@ export default {
                 payload.latitude = deviceLatitude
                 payload.longitude = deviceLongitude
             }
+
+            console.log(payload)
             try {
                 const resp = await apiSendSMS(payload)
 
@@ -96,7 +98,7 @@ export default {
                     window.location.href = `/`
                 }
             } catch (err) {
-                console.error('Error creating account:', err)
+                console.error('Error sending sms:', err)
             }
         },
         async updateCountdown() {
