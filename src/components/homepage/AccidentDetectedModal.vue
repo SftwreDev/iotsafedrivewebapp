@@ -77,18 +77,11 @@ export default {
 
         async sendSMS(false_alarm) {
             const payload = {
-                is_false_alarm: !!false_alarm
+                is_false_alarm: !!false_alarm,
+                latitude: deviceLatitude,
+                longitude: deviceLongitude
             }
-
-            if (this.latitude !== '0.0' || this.longitude !== '0.0') {
-                payload.latitude = `${this.latitude}`
-                payload.longitude = `${this.longitude}`
-            } else {
-                payload.latitude = `${deviceLatitude}`
-                payload.longitude = `${deviceLongitude}`
-            }
-
-            console.log('payload', payload)
+            
             try {
                 const resp = await apiSendSMS(payload)
                 console.log('Respo', resp)
