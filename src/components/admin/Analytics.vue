@@ -243,13 +243,13 @@ async function apiStatistics(payload) {
                 <RespondedAccicent :rescuedAccidentTimestamps="rescuedAccidentTimestamps"
                                    :totalRescuedAccident="totalRescuedAccident" />
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mt-10">
+            <div class="mx-auto max-w-7xl mt-10">
                 <PendingVsOnGoingAccident :closed_percentage="closed_percentage"
                                           :on_going_percentage="on_going_percentage"
                                           :pending_percentage="pending_percentage" />
-                <div class="col-span-2 ">
-                    <CustomDataTable />
-                </div>
+                <!--                <div class="col-span-2 ">-->
+                <!--                    <CustomDataTable />-->
+                <!--                </div>-->
             </div>
         </div>
 
