@@ -69,14 +69,17 @@ export const useAllUserStore = defineStore({
 
 
 export const useIsPasswordChangedStore = defineStore({
-    id: 'users',
+    id: 'user',
     state: () => ({
-        is_password_changed: false
+        is_password_changed: false,
+        loading: false
     }),
     getters: {},
     actions: {
         async fetchIsPasswordChanged() {
+            this.loading = true
             try {
+
                 const resp = await fetch(`${BASE_URL}/api/actor/is-password-changed`, {
                     method: 'GET',
                     headers: {
@@ -84,8 +87,10 @@ export const useIsPasswordChangedStore = defineStore({
                     }
                 })
                 const data = await resp.json()
-                if (data.status_code === 200) {
+                console.log(data['status_code'])
+                if (data['status_code'] === 200) {
                     this.is_password_changed = data['data'][0]
+                    this.loading = false
                     console.log('this.is_password_changed', this.is_password_changed)
                 } else {
                     this.loading = false

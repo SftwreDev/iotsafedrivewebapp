@@ -213,7 +213,7 @@ async function apiCheckIfForwarded(id) {
                                     Mark as Done
                                 </button>
                             </div>
-                            <div v-if="histories[0]['status_report'] === 'forwarded'">
+                            <div v-if="histories[0]['status_report'] === 'forwarded' && role === 'rescuer'">
                                 <button
                                     class="mr-5 relative inline-flex gap-x-1 items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                     type="button"

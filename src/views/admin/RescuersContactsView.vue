@@ -21,7 +21,7 @@ fetchRescuers()
 
 <template>
     <div v-if="!loading">
-        <CustomDataTable :cols="columns" :componentToRender="AddRescuer" :isLoading="loading" :rows="rescuers"
+        <CustomDataTable :cols="columns" :isLoading="loading" :rows="rescuers"
                          title="Rescuers Contacts" />
     </div>
 
