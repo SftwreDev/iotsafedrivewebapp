@@ -24,6 +24,8 @@ export const useAllActivityHistoriesStore = defineStore({
                     this.histories = data['data']
                     console.log('this.histories', this.histories)
                     this.loading = false
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching rescuers:', error)
@@ -89,6 +91,8 @@ export const useDetailedActivityHistoriesStore = defineStore({
                     this.center = { lat: data['data'][0]['latitude'], lng: data['data'][0]['longitude'] }
                     console.log('this.histories', this.histories)
                     this.loading = true
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching rescuers:', error)

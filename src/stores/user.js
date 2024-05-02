@@ -24,6 +24,8 @@ export const useUserProfileStore = defineStore({
                     this.userProfile = data['data']
                     console.log('this.userProfile', this.userProfile)
                     this.loading = false
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching user profile:', error)
@@ -55,6 +57,8 @@ export const useAllUserStore = defineStore({
                     this.users = data['data']
                     console.log('this.users', this.users)
                     this.loading = false
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching user profile:', error)
@@ -83,6 +87,8 @@ export const useIsPasswordChangedStore = defineStore({
                 if (data.status_code === 200) {
                     this.is_password_changed = data['data'][0]
                     console.log('this.is_password_changed', this.is_password_changed)
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error checking if password changed:', error)

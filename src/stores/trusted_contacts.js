@@ -21,6 +21,8 @@ export const useTrustedContactsStore = defineStore({
                 if (data.status_code === 200) {
                     this.trusted_contacts = data['data']
                     console.log(this.trusted_contacts)
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching trusted_contacts:', error)
@@ -51,6 +53,8 @@ export const useAllTrustedContactsStore = defineStore({
                 if (data.status_code === 200) {
                     this.trusted_contacts = data['data']
                     console.log('this.trusted_contacts', this.trusted_contacts)
+                    this.loading = false
+                } else {
                     this.loading = false
                 }
             } catch (error) {

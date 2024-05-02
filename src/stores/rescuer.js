@@ -24,6 +24,8 @@ export const useRescuerStore = defineStore({
                     this.rescuers = data['data']
                     console.log('this.rescuers', this.rescuers)
                     this.loading = false
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching rescuers:', error)

@@ -23,6 +23,8 @@ export const useVehicleStore = defineStore({
                     this.vehicle = data['data']
                     console.log('this.vehicle', this.vehicle)
 
+                } else {
+                    this.loading = false
                 }
             } catch (error) {
                 console.error('Error fetching rescuers:', error)
@@ -53,6 +55,8 @@ export const useAllVehicleStore = defineStore({
                 if (data.status_code === 200) {
                     this.vehicle = data['data']
                     console.log('this.vehicle', this.vehicle)
+                    this.loading = false
+                } else {
                     this.loading = false
                 }
             } catch (error) {
