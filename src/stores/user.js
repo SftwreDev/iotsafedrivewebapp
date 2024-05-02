@@ -62,3 +62,31 @@ export const useAllUserStore = defineStore({
         }
     }
 })
+
+
+export const useIsPasswordChangedStore = defineStore({
+    id: 'users',
+    state: () => ({
+        is_password_changed: false
+    }),
+    getters: {},
+    actions: {
+        async fetchIsPasswordChanged() {
+            try {
+                const resp = await fetch(`${BASE_URL}/api/actor/is-password-changed`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                })
+                const data = await resp.json()
+                if (data.status_code === 200) {
+                    this.is_password_changed = data['data'][0]
+                    console.log('this.is_password_changed', this.is_password_changed)
+                }
+            } catch (error) {
+                console.error('Error checking if password changed:', error)
+            }
+        }
+    }
+})

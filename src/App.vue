@@ -1,6 +1,5 @@
 <script>
 import { apiVerifyAccessToken } from '@/api'
-import router from '@/router/index.js'
 
 export default {
     // Properties returned from data() become reactive state
@@ -21,10 +20,31 @@ export default {
             const access_token = localStorage.getItem('access_token')
             this.isStaff = localStorage.getItem('is_staff')
             this.isSuperUser = localStorage.getItem('is_superuser')
-            const verifyAccessToken = await apiVerifyAccessToken(access_token)
+            const resp = await apiVerifyAccessToken(access_token)
 
-            if (verifyAccessToken['status_code'] === 200) {
+            if (resp['status_code'] === 200) {
                 this.isAuthenticated = true
+                const access_token = resp['data'][0]['access_token']
+                const refresh_token = resp['data'][0]['refresh_token']
+                const first_name = resp['data'][0]['first_name']
+                const last_name = resp['data'][0]['last_name']
+                const profile_picture = resp['data'][0]['profile_picture']
+                const email_address = resp['data'][0]['email']
+                const is_superuser = resp['data'][0]['is_superuser']
+                const is_staff = resp['data'][0]['is_staff']
+                const is_onboarding_done = resp['data'][0]['is_onboarding_done']
+                const role = resp['data'][0]['role']
+
+                // Add the token to localStorage
+                localStorage.setItem('access_token', access_token)
+                localStorage.setItem('refresh_token', refresh_token)
+                localStorage.setItem('full_name', `${first_name} ${last_name}`)
+                localStorage.setItem('email_address', email_address)
+                localStorage.setItem('profile_picture', profile_picture)
+                localStorage.setItem('is_superuser', is_superuser)
+                localStorage.setItem('is_staff', is_staff)
+                localStorage.setItem('is_onboarding_done', is_onboarding_done)
+                localStorage.setItem('role', role)
             } else {
                 this.isAuthenticated = false
                 // router.push('/')

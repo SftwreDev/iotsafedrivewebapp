@@ -126,3 +126,37 @@ export const useLatestActivityHistoriesStore = defineStore({
         }
     }
 })
+
+
+export const useForwardedAccidentStore = defineStore({
+    id: 'forwarded_accidents',
+    state: () => ({
+        forwarded_accidents: [],
+        faLoading: false
+    }),
+    getters: {},
+    actions: {
+        async fetchForwardedAccidents() {
+            try {
+                this.faLoading = true
+                const resp = await fetch(`${BASE_URL}/api/activity-history/forwarded?type=all`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${access_token}`
+                    }
+                })
+                const data = await resp.json()
+                if (data?.status_code === 200) {
+                    this.forwarded_accidents = data['data']
+                    this.faLoading = false
+                } else {
+                    this.forwarded_accidents = []
+                    this.faLoading = false
+                }
+            } catch (error) {
+                console.error('Error fetching accidents:', error)
+                this.faLoading = false
+            }
+        }
+    }
+})

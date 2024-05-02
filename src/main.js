@@ -6,6 +6,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import VueHtmlToPaper from './plugins/VueHtmlToPaper'
+import VueApexCharts from 'vue3-apexcharts'
 
 const options = {
     name: '_blank',
@@ -27,6 +28,7 @@ const app = createApp(App)
 const pinia = createPinia()
 
 app.use(VueHtmlToPaper, options)
+app.use(VueApexCharts)
 app.use(pinia)
 app.use(router)
 app.mount('#app')

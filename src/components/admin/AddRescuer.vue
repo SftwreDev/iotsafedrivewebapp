@@ -61,7 +61,7 @@ async function apiAddNewRescuer(payload) {
 </script>
 
 <template>
-    <div class="border-b border-gray-200 bg-white px-4 py-5 sm:px-6">
+    <div class="border-b border-gray-200 bg-white ">
         <div class="-ml-4 flex flex-wrap items-center justify-between sm:flex-nowrap">
             <div class="ml-4 mt-2">
 
@@ -72,7 +72,7 @@ async function apiAddNewRescuer(payload) {
                     type="button"
                     @click="open = true"
                 >
-                    Add new
+                    Add new rescuer
                 </button>
             </div>
         </div>

@@ -40,7 +40,7 @@ export default {
         },
 
         viewNotification(data) {
-            const id = data.id
+            const id = data.activity_history_id
             window.location.href = `/alert/${id}`
         },
         playAlarm() {
@@ -57,7 +57,7 @@ export default {
                 const { status, data } = await apiCheckAlerts()
 
                 if (data.data) {
-                    this.id = data.data[0].id
+                    this.id = data.data[0].activity_history_id
                     this.isAccidentDetected = true
                 } else {
                     this.isAccidentDetected = false
@@ -77,7 +77,7 @@ export default {
 
 async function apiCheckAlerts() {
     try {
-        const response = await fetch(`${BASE_URL}/api/activity-history/latest`, {
+        const response = await fetch(`${BASE_URL}/api/activity-history/forwarded?type=limit`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${access_token}`
@@ -145,7 +145,7 @@ async function apiCheckAlerts() {
                     </div>
                     <div class="ml-3">
                         <p class="text-base text-red-700">
-                            Accident detected!
+                            Received accident notification!
                             {{ ' ' }}
                             <a :href="'/alert/' + id" class="font-medium text-red-700 underline hover:text-red-600">
                                 Click here to view more details
@@ -195,7 +195,7 @@ async function apiCheckAlerts() {
                 :sortable="true"
             >
                 <template #id="data">
-                    <strong>#{{ data.value.id }}</strong>
+                    <strong>#{{ data.value.activity_history_id }}</strong>
                 </template>
                 <template #actions="data">
                     <div class="flex gap-4">

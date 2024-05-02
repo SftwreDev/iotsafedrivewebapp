@@ -18,8 +18,10 @@ export default {
             selected: '',
             responders_name: '',
             notes: '',
+            forwarded_by: '',
             isLoading: false,
-            isSuccess: false
+            isSuccess: false,
+            alreadyForwarded: false
         }
     },
     computed: {},
@@ -28,14 +30,15 @@ export default {
             const payload = {
                 activity_history_id: this.id,
                 rescuer_id: `${this.selected.id}`,
-                responders_name: this.responders_name,
-                notes: this.notes
+                forwarded_by: this.forwarded_by,
+                notes: this.notes,
+                status: 'pending'
             }
             this.isLoading = true
             try {
-                const resp = await apiSaveSelectionRescuer(payload)
+                const resp = await apiForwardAccident(payload)
 
-                if (resp['status_code'] === 201) {
+                if (resp['status_code'] === 200) {
                     this.isLoading = false
                     this.isSuccess = true
 
@@ -47,13 +50,15 @@ export default {
                 console.error('Error creating account:', err)
             }
         }
+
+
     }
 }
 
 
-async function apiSaveSelectionRescuer(payload) {
+async function apiForwardAccident(payload) {
     try {
-        const resp = await fetch(`${BASE_URL}/api/rescuers/select`, {
+        const resp = await fetch(`${BASE_URL}/api/accident-alert/forward`, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` }
@@ -64,6 +69,7 @@ async function apiSaveSelectionRescuer(payload) {
         return []
     }
 }
+
 </script>
 <template>
 
@@ -106,20 +112,6 @@ async function apiSaveSelectionRescuer(payload) {
             </Listbox>
         </div>
 
-        <div class="mt-8">
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="responders_name">Responder's
-                name</label>
-            <div class="mt-2">
-                <input id="responders_name" v-model="responders_name"
-                       aria-describedby="responders_name_description"
-                       autocomplete="off"
-                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                       name="responders_name"
-                />
-            </div>
-            <p id="responders_name_description" class="mt-2 text-sm text-gray-500">You can select any of the rescuer's
-                team</p>
-        </div>
 
         <div class="mt-8">
             <label class="block text-sm font-medium leading-6 text-gray-900" for="notes">Notes</label>
@@ -128,6 +120,15 @@ async function apiSaveSelectionRescuer(payload) {
                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                           name="notes"
                           rows="4" />
+            </div>
+        </div>
+
+        <div class="mt-8">
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="forwarded_by">Forwarded by</label>
+            <div class="mt-2">
+                <input id="forwarded_by" v-model="forwarded_by"
+                       class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                       name="notes" />
             </div>
         </div>
 

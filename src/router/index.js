@@ -122,6 +122,17 @@ const router = createRouter({
             }
         },
         {
+            path: '/analytics',
+            name: 'analytics',
+            // route level code-splitting
+            // this generates a separate chunk (About.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: () => import('../views/admin/AnalyticsView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
+        },
+        {
             path: '/alert/:id',
             name: 'alert',
             // route level code-splitting

@@ -20,9 +20,9 @@ fetchRescuers()
 </script>
 
 <template>
-    <AddRescuer />
     <div v-if="!loading">
-        <CustomDataTable :cols="columns" :isLoading="loading" :rows="rescuers" title="Rescuers Contacts" />
+        <CustomDataTable :cols="columns" :componentToRender="AddRescuer" :isLoading="loading" :rows="rescuers"
+                         title="Rescuers Contacts" />
     </div>
 
 

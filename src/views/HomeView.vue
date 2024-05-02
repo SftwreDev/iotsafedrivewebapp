@@ -14,17 +14,22 @@ const { fetchRescuers } = useRescuerStore()
 const { trusted_contacts } = storeToRefs(useTrustedContactsStore())
 const { fetchTrustedContacts } = useTrustedContactsStore()
 const is_onboarding_done = localStorage.getItem('is_onboarding_done') === 'true'
-const is_staff = localStorage.getItem('is_staff') === 'true'
-const is_superuser = localStorage.getItem('is_superuser') === 'true'
+const role = localStorage.getItem('role')
 
 fetchUserProfile()
 fetchRescuers()
 fetchTrustedContacts()
+
+
+if (role === 'super_admin' || role === 'rescuer') {
+    window.location.href = '/dashboard'
+}
+
 </script>
 
 <template>
     <main>
-        <div v-if="is_staff">
+        <div v-if="role === 'user'">
             <div v-if="is_onboarding_done">
                 <HomePage
                     v-if="!loading"
@@ -37,7 +42,7 @@ fetchTrustedContacts()
                 <Onboarding :userProfile="userProfile" />
             </div>
         </div>
-        <div v-if="is_superuser">
+        <div v-if="role === 'super_admin' || role === 'rescuer'">
 
         </div>
     </main>

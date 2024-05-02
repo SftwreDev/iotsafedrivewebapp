@@ -1,14 +1,21 @@
 <script>
 import BASE_URL from '../../constants.js'
+import CustomSuccessAlerts from '@/components/alerts/CustomSuccessAlerts.vue'
+import CustomErrorAlerts from '@/components/alerts/CustomErrorAlerts.vue'
 
 export default {
+    components: { CustomErrorAlerts, CustomSuccessAlerts },
     // Properties returned from data() become reactive state
     // and will be exposed on `this`.
     data() {
         return {
             email: '',
             password: '',
-            isLoading: false
+            content: '',
+
+            isLoading: false,
+            isSuccess: false,
+            isError: false
         }
     },
 
@@ -25,6 +32,9 @@ export default {
                 const resp = await apiSignIn(payload)
 
                 if (resp['status_code'] === 200) {
+                    this.content = resp.message
+                    this.isError = false
+                    this.isSuccess = !this.isSuccess
                     localStorage.clear()
                     const access_token = resp['data'][0]['access_token']
                     const refresh_token = resp['data'][0]['refresh_token']
@@ -35,6 +45,7 @@ export default {
                     const is_superuser = resp['data'][0]['is_superuser']
                     const is_staff = resp['data'][0]['is_staff']
                     const is_onboarding_done = resp['data'][0]['is_onboarding_done']
+                    const role = resp['data'][0]['role']
 
                     // Add the token to localStorage
                     localStorage.setItem('access_token', access_token)
@@ -45,15 +56,22 @@ export default {
                     localStorage.setItem('is_superuser', is_superuser)
                     localStorage.setItem('is_staff', is_staff)
                     localStorage.setItem('is_onboarding_done', is_onboarding_done)
+                    localStorage.setItem('role', role)
 
                     this.isLoading = false
+                    setTimeout(() => {
+                        if (is_superuser) {
+                            window.location.href = '/'
+                        } else {
+                            window.location.href = '/'
+                        }
+                    }, 2000)
 
-                    if (is_superuser) {
-                        window.location.href = '/dashboard'
-                    } else {
-                        window.location.href = '/'
-                    }
-
+                } else {
+                    this.isLoading = false
+                    this.content = resp.message
+                    this.isSuccess = false
+                    this.isError = !this.isError
                 }
             } catch (err) {
                 console.error('Error creating account:', err)
@@ -172,6 +190,9 @@ async function apiSignIn(payload) {
                             Sign in
                         </button>
                     </div>
+
+                    <CustomSuccessAlerts v-if="isSuccess" :content="content" />
+                    <CustomErrorAlerts v-if="isError" :content="content" />
                 </div>
             </div>
 

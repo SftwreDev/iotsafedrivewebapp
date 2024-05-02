@@ -1,17 +1,16 @@
 <script>
+const role = localStorage.getItem('role')
 export default {
     // Properties returned from data() become reactive state
     // and will be exposed on `this`.
 
     data() {
-        const is_staff = localStorage.getItem('is_staff') === 'true'
-        const is_superuser = localStorage.getItem('is_superuser') === 'true'
+        const role = localStorage.getItem('role')
         return {
             full_name: '',
             email: '',
             profile_picture: '',
-            is_staff,
-            is_superuser
+            role
         }
     },
 
@@ -36,8 +35,6 @@ export default {
 
     mounted() {
         this.getLoggedInUser()
-        console.log('is_superuser', this.is_superuser)
-        console.log('is_staff', this.is_staff)
     }
 }
 </script>
@@ -100,12 +97,12 @@ export default {
                             <span class="flex w-full items-center justify-between">
                                 <span class="flex min-w-0 items-center justify-between space-x-3">
                                     <img
-                                        v-if="is_staff"
+                                        v-if="role === 'user'"
                                         :src="profile_picture"
                                         alt=""
                                         class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
                                     />
-                                    <div v-if="is_superuser">
+                                    <div v-if="role === 'super_admin' || role === 'rescuer'">
                                         <span class="inline-block h-16 w-16 overflow-hidden rounded-full bg-gray-100">
                                           <img alt=""
                                                class="mx-auto h-16 w-16 rounded-full ring-1 ring-custom-bg-500 p-0.5"
@@ -158,7 +155,7 @@ export default {
                                 </Menu>
                             </div>
                             <div class="mt-5 h-0 flex-1 overflow-y-auto">
-                                <nav v-if="is_staff" class="mt-10 px-3">
+                                <nav v-if="role === 'user'" class="mt-10 px-3">
                                     <div class="space-y-1">
                                         <a
                                             v-for="item in navigation"
@@ -187,18 +184,19 @@ export default {
                                     </div>
                                 </nav>
 
-                                <nav v-if="is_superuser" class="mt-10 px-3">
+                                <nav v-if="role === 'super_admin' || role === 'rescuer'" class="mt-10 px-3">
                                     <div class="space-y-1">
                                         <a
                                             v-for="item in admin_navigation"
+                                            v-show="!item.hide"
                                             :key="item.name"
                                             :aria-current="item.current ? 'page' : undefined"
                                             :class="[
-                                item.current
-                                    ? 'bg-custom-bg-500 text-gray-100'
-                                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
-                                'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
-                            ]"
+                                                item.current
+                                                    ? 'bg-custom-bg-500 text-gray-100'
+                                                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900',
+                                                'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
+                                            ]"
                                             :href="item.href"
                                         >
                                             <!--                            <component-->
@@ -243,12 +241,12 @@ export default {
                             <span class="flex w-full items-center justify-between">
                                 <span class="flex min-w-0 items-center justify-between space-x-3">
                                     <img
-                                        v-if="is_staff"
+                                        v-if="role === 'user'"
                                         :src="profile_picture"
                                         alt=""
                                         class="h-10 w-10 flex-shrink-0 rounded-full bg-gray-300"
                                     />
-                                    <div v-if="is_superuser">
+                                    <div v-if="role === 'super_admin' || role === 'rescuer'">
                                         <span class="inline-block h-16 w-16 overflow-hidden rounded-full bg-gray-100">
                                           <img alt=""
                                                class="mx-auto h-16 w-16 rounded-full ring-1 ring-custom-bg-500 p-0.5"
@@ -300,7 +298,7 @@ export default {
                     </transition>
                 </Menu>
                 <!-- Navigation -->
-                <nav v-if="is_staff" class="mt-10 px-3">
+                <nav v-if="role === 'user'" class="mt-10 px-3">
                     <div class="space-y-1">
                         <a
                             v-for="item in navigation"
@@ -329,10 +327,11 @@ export default {
                     </div>
                 </nav>
 
-                <nav v-if="is_superuser" class="mt-10 px-3">
+                <nav v-if="role === 'super_admin' || role === 'rescuer'" class="mt-10 px-3">
                     <div class="space-y-1">
                         <a
                             v-for="item in admin_navigation"
+                            v-show="!item.hide"
                             :key="item.name"
                             :aria-current="item.current ? 'page' : undefined"
                             :class="[
@@ -390,14 +389,13 @@ import {
     TransitionRoot
 } from '@headlessui/vue'
 import {
-    Bars3CenterLeftIcon,
     HomeIcon,
     XMarkIcon,
     Cog6ToothIcon,
     ExclamationTriangleIcon
 
 } from '@heroicons/vue/24/outline'
-import { ChevronUpDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
+import { ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 
 const navigation = [
     { name: 'Profile', href: '/', icon: HomeIcon, current: lastSegmentPath === 'localhost:5173' },
@@ -408,37 +406,50 @@ const admin_navigation = [
         name: 'Dashboard',
         href: '/dashboard',
         icon: HomeIcon,
-        current: lastSegmentPath === 'dashboard'
+        current: lastSegmentPath === 'dashboard',
+        hide: false
+    },
+    {
+        name: 'Analytics',
+        href: '/analytics',
+        icon: HomeIcon,
+        current: lastSegmentPath === 'analytics',
+        hide: false
     },
     {
         name: 'Registered Vehicles',
         href: '/registered-vehicle',
         icon: faCar,
-        current: lastSegmentPath === 'registered-vehicle'
+        current: lastSegmentPath === 'registered-vehicle',
+        hide: false
     },
     {
         name: 'Emergency Contacts',
         href: '/emergency-contacts',
         icon: ExclamationTriangleIcon,
-        current: lastSegmentPath === 'emergency-contacts'
+        current: lastSegmentPath === 'emergency-contacts',
+        hide: false
     },
     {
         name: 'Rescue Team Contacts',
         href: '/rescuers-contacts',
         icon: ExclamationTriangleIcon,
-        current: lastSegmentPath === 'rescuers-contacts'
+        current: lastSegmentPath === 'rescuers-contacts',
+        hide: false
     },
     {
         name: 'Activity History',
         href: '/activity-history',
         icon: ExclamationTriangleIcon,
-        current: lastSegmentPath === 'activity-history'
+        current: lastSegmentPath === 'activity-history',
+        hide: false
     },
     {
-        name: 'Registered User Accounts',
+        name: 'User Accounts',
         href: '/users',
         icon: ExclamationTriangleIcon,
-        current: lastSegmentPath === 'users'
+        current: lastSegmentPath === 'users',
+        hide: role === 'rescuer'
     }
 ]
 

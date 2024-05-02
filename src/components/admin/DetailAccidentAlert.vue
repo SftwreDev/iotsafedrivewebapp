@@ -12,16 +12,13 @@ const logs = [
     { 'title': 'Status Report', 'field': 'status_report' }
 ]
 
-const people = [
-    { name: 'Lindsay Walton', title: 'Front-end Developer', email: 'lindsay.walton@example.com', role: 'Member' }
-    // More people...
-]
 </script>
 <script>
 import MapsLocation from '@/components/maps/MapsLocation.vue'
 import BASE_URL from '@/constants.js'
 
 const access_token = localStorage.getItem('access_token')
+const role = localStorage.getItem('role')
 
 export default {
     props: ['histories', 'loading', 'center', 'id', 'rescuers'],
@@ -35,7 +32,10 @@ export default {
             formData: {},
             isLoading: false,
             open: false,
-            assignRescuer: false
+            assignRescuer: false,
+            alreadyForwarded: false,
+
+            role
         }
     },
     methods: {
@@ -67,12 +67,37 @@ export default {
             } catch (err) {
                 console.log(err)
             }
+        },
+
+        async checkIfForwarded() {
+            try {
+                const resp = await apiCheckIfForwarded(this.id)
+
+                this.alreadyForwarded = resp['status_code'] === 200
+            } catch (err) {
+                console.error('Error creating account:', err)
+            }
+        },
+
+        async activityAction(action) {
+            try {
+                const resp = await apiActivityHistoryAction(action, this.id)
+
+                if (resp['status_code'] === 200) {
+                    setInterval(() => {
+                        window.location.href = `/alert/${this.id}`
+                    }, 3000)
+                }
+            } catch (err) {
+                console.error('Error creating account:', err)
+            }
         }
 
 
     },
     async mounted() {
         await this.getRescuersDetails()
+        setInterval(await this.checkIfForwarded, 500)
     }
 }
 
@@ -81,6 +106,21 @@ async function apiCloseActivityHistoryApi(id) {
     try {
         const resp = await fetch(`${BASE_URL}/api/activity-history/close?id=${id}`, {
             method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` }
+        }).then((resp) => resp)
+        return resp.json()
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+}
+
+
+async function apiActivityHistoryAction(action, id) {
+
+    try {
+        const resp = await fetch(`${BASE_URL}/api/accident-alert/action?action=${action}&activity_id=${id}`, {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` }
         }).then((resp) => resp)
         return resp.json()
@@ -113,9 +153,28 @@ async function apiGetRescuerDetailsApi(id) {
         return { status: null, data: null }
     }
 }
+
+async function apiCheckIfForwarded(id) {
+    try {
+        const resp = await fetch(`${BASE_URL}/api/accident-alert/status?id=${id}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` }
+        }).then((resp) => resp)
+        return resp.json()
+    } catch (error) {
+        console.log(error)
+        return []
+    }
+}
 </script>
+
+<style scoped>
+[v-cloak] {
+    display: none;
+}
+</style>
 <template>
-    <div v-if="!loading" class="mx-auto max-w-9xl sm:px-6 lg:px-8 mt-20">
+    <div v-cloak v-if="!loading" class="mx-auto max-w-9xl sm:px-6 lg:px-8 mt-20">
         <div class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow">
             <div class="px-4 py-5 sm:px-6">
                 <!-- Content goes here -->
@@ -125,12 +184,13 @@ async function apiGetRescuerDetailsApi(id) {
                             <h3 class="text-base font-semibold leading-6 text-gray-900">Accident Alert</h3>
                         </div>
                         <div class="flex gap-x-2 ml-4 mt-2 flex-shrink-0">
+
                             <button
-                                v-if="histories[0]['status_report'] === 'pending'"
+                                v-if="histories[0]['status_report'] === 'pending' && role === 'super_admin' && !alreadyForwarded"
                                 class="relative mr-5 inline-flex items-center rounded-md bg-custom-bg-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-custom-bg-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-custom-bg-500"
                                 type="button"
                                 @click="assignRescuer = true">
-                                Select rescuer
+                                Forward to
                             </button>
                             <button
                                 v-if="histories[0]['status_report'] === 'closed'"
@@ -144,13 +204,38 @@ async function apiGetRescuerDetailsApi(id) {
                                 type="button">
                                 In-Progress
                             </button>
-                            <button
-                                v-if="histories[0]['status_report'] === 'pending' || histories[0]['status_report'] === 'in-progress'"
-                                class="relative inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
-                                type="button"
-                                @click="open = !open">
-                                Mark as Done
-                            </button>
+                            <div v-if="role === 'rescuer' ">
+                                <button
+                                    v-if="histories[0]['status_report'] === 'pending' || histories[0]['status_report'] === 'in-progress' || histories[0]['status_report'] === 'accepted'"
+                                    class="relative inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                    type="button"
+                                    @click="open = !open">
+                                    Mark as Done
+                                </button>
+                            </div>
+                            <div v-if="histories[0]['status_report'] === 'forwarded'">
+                                <button
+                                    class="mr-5 relative inline-flex gap-x-1 items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    type="button"
+                                    @click="activityAction('accepted')">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                         stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="m4.5 12.75 6 6 9-13.5" stroke-linecap="round"
+                                              stroke-linejoin="round" />
+                                    </svg>
+                                    Accept
+                                </button>
+                                <button
+                                    class="relative inline-flex gap-x-1 items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
+                                    type="button"
+                                    @click="activityAction('rejected')">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                         stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    Reject
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -441,7 +526,3 @@ async function apiGetRescuerDetailsApi(id) {
         </Dialog>
     </TransitionRoot>
 </template>
-
-<style scoped>
-
-</style>
