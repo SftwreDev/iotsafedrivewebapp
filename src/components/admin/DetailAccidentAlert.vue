@@ -1,6 +1,8 @@
 <script setup>
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationTriangleIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Listbox, ListboxButton, ListboxLabel, ListboxOption, ListboxOptions } from '@headlessui/vue'
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/vue/20/solid'
 import SelectRescuer from '@/components/admin/SelectRescuer.vue'
 
 const logs = [
@@ -11,6 +13,7 @@ const logs = [
     { 'title': 'Status', 'field': 'status' },
     { 'title': 'Status Report', 'field': 'status_report' }
 ]
+
 
 </script>
 <script>
@@ -34,6 +37,19 @@ export default {
             open: false,
             assignRescuer: false,
             alreadyForwarded: false,
+            rejectModal: false,
+
+            reasonForRejecting: '',
+
+            reasons: [
+                { 'value': 'No available rescue team at the moment' },
+                { 'value': 'No ambulance available' },
+                { 'value': 'All Personnel deployed' },
+                { 'value': 'Others' }
+            ],
+
+            selected: '-',
+            otherReasons: '',
 
             role
         }
@@ -81,7 +97,10 @@ export default {
 
         async activityAction(action) {
             try {
-                const resp = await apiActivityHistoryAction(action, this.id)
+                const payload = {
+                    'reason': this.selected !== 'Others' ? this.selected : this.otherReasons
+                }
+                const resp = await apiActivityHistoryAction(action, this.id, payload)
 
                 if (resp['status_code'] === 200) {
                     setInterval(() => {
@@ -116,11 +135,12 @@ async function apiCloseActivityHistoryApi(id) {
 }
 
 
-async function apiActivityHistoryAction(action, id) {
+async function apiActivityHistoryAction(action, id, payload) {
 
     try {
         const resp = await fetch(`${BASE_URL}/api/accident-alert/action?action=${action}&activity_id=${id}`, {
             method: 'POST',
+            body: JSON.stringify(payload),
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${access_token}` }
         }).then((resp) => resp)
         return resp.json()
@@ -228,7 +248,7 @@ async function apiCheckIfForwarded(id) {
                                 <button
                                     class="relative inline-flex gap-x-1 items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                                     type="button"
-                                    @click="activityAction('rejected')">
+                                    @click="rejectModal = true">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor"
                                          stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
@@ -521,6 +541,115 @@ async function apiCheckIfForwarded(id) {
                             </DialogPanel>
                         </TransitionChild>
                     </div>
+                </div>
+            </div>
+        </Dialog>
+    </TransitionRoot>
+
+
+    <TransitionRoot :show="rejectModal" as="template">
+        <Dialog class="relative z-10" @close="open = false">
+            <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
+                             leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            </TransitionChild>
+
+            <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                    <TransitionChild as="template" enter="ease-out duration-300"
+                                     enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                     enter-to="opacity-100 translate-y-0 sm:scale-100" leave="ease-in duration-200"
+                                     leave-from="opacity-100 translate-y-0 sm:scale-100"
+                                     leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                        <DialogPanel
+                            class="h-96 relative transform overflow-hidden rounded-lg bg-white px-5 py-10 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                            <div class="sm:flex sm:items-start">
+                                <div
+                                    class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                    <ExclamationTriangleIcon aria-hidden="true" class="h-6 w-6 text-red-600" />
+                                </div>
+                                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                    <DialogTitle as="h3" class="text-base font-semibold leading-6 text-gray-900">
+                                        Reject notification
+                                    </DialogTitle>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-500">Are you sure you want to reject this accident
+                                            notification?</p>
+
+                                        <Listbox v-model="selected" as="div" class="mt-5">
+                                            <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">
+                                                Select reason for rejecting:
+                                            </ListboxLabel>
+                                            <div class="relative mt-2">
+                                                <ListboxButton
+                                                    class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                                    <span class="block truncate">{{ selected }}</span>
+                                                    <span
+                                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                                      <ChevronUpDownIcon aria-hidden="true"
+                                                                         class="h-5 w-5 text-gray-400" />
+                                                    </span>
+                                                </ListboxButton>
+
+                                                <transition leave-active-class="transition ease-in duration-100"
+                                                            leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                                    <ListboxOptions
+                                                        class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                        <ListboxOption v-for="(reason, idx) in reasons" :key="idx"
+                                                                       v-slot="{ active, selected }"
+                                                                       :value="reason.value"
+                                                                       as="template">
+                                                            <li :class="[active ? 'bg-indigo-600 text-white' : 'text-gray-900', 'relative cursor-default select-none py-2 pl-8 pr-4']">
+                                                                <span
+                                                                    :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{ reason.value
+                                                                    }}</span>
+
+                                                                <span v-if="selected"
+                                                                      :class="[active ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 left-0 flex items-center pl-1.5']">
+                                                                    <CheckIcon aria-hidden="true" class="h-5 w-5" />
+                                                                  </span>
+                                                            </li>
+                                                        </ListboxOption>
+                                                    </ListboxOptions>
+                                                </transition>
+                                            </div>
+                                        </Listbox>
+
+                                        <div v-if="selected === 'Others'">
+                                            <label
+                                                class="block text-sm font-medium leading-6 text-gray-900 mt-5"
+                                                for="reasons">If others, please specify:</label>
+                                            <div class="mt-2">
+                                                <textarea id="reasons"
+                                                          v-model="otherReasons"
+                                                          class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                          name="reasons"
+                                                          rows="2" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-10 sm:flex sm:flex-row-reverse">
+                                <button
+                                    v-if="selected === '-'"
+                                    class="inline-flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+                                    type="button">Reject
+                                </button>
+                                <button
+                                    v-if="selected !== '-'"
+                                    class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                    type="button"
+                                    @click="activityAction('rejected')">Reject
+                                </button>
+                                <button ref="cancelButtonRef"
+                                        class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                                        type="button" @click="rejectModal = false">Cancel
+                                </button>
+                            </div>
+                        </DialogPanel>
+                    </TransitionChild>
                 </div>
             </div>
         </Dialog>

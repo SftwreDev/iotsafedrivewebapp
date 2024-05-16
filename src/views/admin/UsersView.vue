@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 import { useAllUserStore } from '@/stores/user.js'
 import CustomDataTable from '@/components/tables/CustomDataTable.vue'
 import AddNewAccounts from '@/components/admin/AddNewAccounts.vue'
+import CustomDataTableActionsUsers from '@/components/tables/CustomDataTableActionsUsers.vue'
 
 const { users, loading } = storeToRefs(useAllUserStore())
 const { fetchAllUsers } = useAllUserStore()
@@ -16,6 +17,7 @@ const columns = [
     { field: 'device_id', title: 'DEVICE ID' },
     { field: 'role', title: 'ROLE' },
     { field: 'date_joined', title: 'DATE JOINED' }
+    // { field: 'actions', title: 'ACTION' }
 ]
 
 fetchAllUsers()
@@ -23,7 +25,8 @@ fetchAllUsers()
 
 <template>
     <div v-if="!loading">
-        <CustomDataTable :cols="columns" :componentToRender="AddNewAccounts" :isLoading="loading" :rows="users"
+        <CustomDataTable :cols="columns" :componentToRender="AddNewAccounts" :isLoading="loading"
+                         :rows="users"
                          title="User accounts" />
 
     </div>

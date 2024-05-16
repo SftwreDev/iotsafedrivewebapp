@@ -65,6 +65,11 @@ export default {
             } catch (err) {
                 console.log(err)
             }
+        },
+
+        async saveAsPdf() {
+            // Pass the element id here
+            await this.$htmlToPaper('dataTable')
         }
     },
 
@@ -158,7 +163,15 @@ async function apiCheckAlerts() {
                 <h2 class="text-3xl">{{ title }}</h2>
             </div>
         </div>
+        <div class="flex gap-x-5 mx-2 mt-5">
 
+            <button
+                class="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                type="button" @click="saveAsPdf">
+                Export as PDF
+            </button>
+
+        </div>
         <div class="max-w-9xl mx-2 px-2 bg-white border border-gray-200 rounded-lg shadow-md mt-5">
             <div class="mb-5">
                 <div class="relative mt-2 rounded-md shadow-sm">

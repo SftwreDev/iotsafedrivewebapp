@@ -445,6 +445,20 @@ const admin_navigation = [
         hide: false
     },
     {
+        name: 'Received Accidents',
+        href: '/received-accidents',
+        icon: ExclamationTriangleIcon,
+        current: lastSegmentPath === 'received-accidents',
+        hide: role === 'super_admin '
+    },
+    {
+        name: 'Forwarded Accidents',
+        href: '/forwarded-accidents',
+        icon: ExclamationTriangleIcon,
+        current: lastSegmentPath === 'forwarded-accidents',
+        hide: role === 'rescuer'
+    },
+    {
         name: 'User Accounts',
         href: '/users',
         icon: ExclamationTriangleIcon,

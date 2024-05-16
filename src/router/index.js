@@ -142,6 +142,28 @@ const router = createRouter({
             meta: {
                 requiresAuth: true // Add meta field to indicate protected route
             }
+        },
+        {
+            path: '/received-accidents',
+            name: 'received-accidents',
+            // route level code-splitting
+            // this generates a separate chunk (About.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: () => import('../views/admin/ReceivedNotificationsView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
+        },
+        {
+            path: '/forwarded-accidents',
+            name: 'forwarded-accidents',
+            // route level code-splitting
+            // this generates a separate chunk (About.[hash].js) for this route
+            // which is lazy-loaded when the route is visited.
+            component: () => import('../views/admin/ReceivedNotificationsView.vue'),
+            meta: {
+                requiresAuth: true // Add meta field to indicate protected route
+            }
         }
     ]
 })
