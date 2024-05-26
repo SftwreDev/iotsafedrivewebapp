@@ -102,7 +102,7 @@ import LoadingSpinner from './components/utils/LoadingSpinner.vue'
             <RouterView />
         </UserLayout>
     </div>
-    <RouterView v-else />
+    <RouterView v-if="role !== 'super_admin' || role !== 'rescuer' || role !== 'user'" />
 </template>
 
 <style scoped></style>
