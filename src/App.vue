@@ -92,17 +92,19 @@ import LoadingSpinner from './components/utils/LoadingSpinner.vue'
 
 <template>
     <LoadingSpinner :isLoading="isLoading" />
-    <div v-if="role === 'super_admin' || role === 'rescuer'">
-        <Layout v-if="isAuthenticated">
-            <RouterView />
-        </Layout>
+    <div v-if="isAuthenticated">
+        <div v-if="role === 'super_admin' || role === 'rescuer'">
+            <Layout>
+                <RouterView />
+            </Layout>
+        </div>
+        <div v-if="role === 'user'">
+            <UserLayout>
+                <RouterView />
+            </UserLayout>
+        </div>
     </div>
-    <div v-if="role === 'user'">
-        <UserLayout v-if="isAuthenticated">
-            <RouterView />
-        </UserLayout>
-    </div>
-    <RouterView v-if="role !== 'super_admin' || role !== 'rescuer' || role !== 'user'" />
+    <RouterView v-else />
 </template>
 
 <style scoped></style>
