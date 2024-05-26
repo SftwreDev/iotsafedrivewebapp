@@ -1,10 +1,10 @@
 <script setup>
-
 import DetailAccidentAlert from '@/components/admin/DetailAccidentAlert.vue'
 import { storeToRefs } from 'pinia'
 import { useDetailedActivityHistoriesStore } from '@/stores/history.js'
 import { useRoute } from 'vue-router'
 import { useRescuerStore } from '@/stores/rescuer.js'
+import { onMounted } from 'vue'
 
 const route = useRoute()
 
@@ -16,17 +16,20 @@ const { fetchRescuers } = useRescuerStore()
 
 const id = route.params.id
 
-
-fetchDetailedActivityHistories(id)
-fetchRescuers()
-
-console.log(center)
+onMounted(async () => {
+    await fetchDetailedActivityHistories(id)
+    await fetchRescuers()
+})
 </script>
 
 <template>
-    <DetailAccidentAlert :id="id" :center="center" :histories="histories" :loading="loading" :rescuers="rescuers" />
+    <DetailAccidentAlert
+        :id="id"
+        :center="center"
+        :histories="histories"
+        :loading="loading"
+        :rescuers="rescuers"
+    />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

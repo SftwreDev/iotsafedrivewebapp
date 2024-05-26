@@ -2,27 +2,33 @@
 import { storeToRefs } from 'pinia'
 import { useAllVehicleStore } from '@/stores/vehicle.js'
 import CustomDataTable from '@/components/tables/CustomDataTable.vue'
+import { onMounted } from 'vue'
+import CustomSyncfusionTable from '@/components/tables/CustomSyncfusionTable.vue'
 
 const { vehicle, loading } = storeToRefs(useAllVehicleStore())
 const { fetchAllVehicle } = useAllVehicleStore()
 
 const columns = [
-    { field: 'owner', title: 'OWNER' },
-    { field: 'brand', title: 'BRAND' },
-    { field: 'model', title: 'MODEL' },
-    { field: 'year_model', title: 'YEAR MODEL' },
-    { field: 'plate_no', title: 'PLATE #' }
+    { field: 'owner', headerText: 'OWNER' },
+    { field: 'brand', headerText: 'BRAND' },
+    { field: 'model', headerText: 'MODEL' },
+    { field: 'year_model', headerText: 'YEAR MODEL' },
+    { field: 'plate_no', headerText: 'PLATE #' }
 ]
-
-fetchAllVehicle()
+onMounted(async () => {
+    await fetchAllVehicle()
+})
 </script>
 
 <template>
     <div v-if="!loading">
-        <CustomDataTable :cols="columns" :isLoading="loading" :rows="vehicle" title="Registered Vehicles" />
+        <CustomSyncfusionTable
+            :cols="columns"
+            :data="vehicle"
+            :isLoading="loading"
+            title="User's Registered Vehicles"
+        />
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

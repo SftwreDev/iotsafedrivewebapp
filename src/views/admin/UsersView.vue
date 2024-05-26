@@ -4,34 +4,38 @@ import { useAllUserStore } from '@/stores/user.js'
 import CustomDataTable from '@/components/tables/CustomDataTable.vue'
 import AddNewAccounts from '@/components/admin/AddNewAccounts.vue'
 import CustomDataTableActionsUsers from '@/components/tables/CustomDataTableActionsUsers.vue'
+import { onMounted } from 'vue'
+import CustomSyncfusionTable from '@/components/tables/CustomSyncfusionTable.vue'
 
 const { users, loading } = storeToRefs(useAllUserStore())
 const { fetchAllUsers } = useAllUserStore()
 
 const columns = [
-    { field: 'first_name', title: 'FIRST NAME' },
-    { field: 'last_name', title: 'LAST NAME' },
-    { field: 'email', title: 'EMAIL ADDRESS' },
-    { field: 'address', title: 'ADDRESS' },
-    { field: 'contact', title: 'CONTACT' },
-    { field: 'device_id', title: 'DEVICE ID' },
-    { field: 'role', title: 'ROLE' },
-    { field: 'date_joined', title: 'DATE JOINED' }
+    { field: 'date_joined', headerText: 'DATE JOINED' },
+    { field: 'first_name', headerText: 'FIRST NAME' },
+    { field: 'last_name', headerText: 'LAST NAME' },
+    { field: 'email', headerText: 'EMAIL ADDRESS' },
+    { field: 'address', headerText: 'ADDRESS' },
+    { field: 'contact', headerText: 'CONTACT' },
+    { field: 'device_id', headerText: 'DEVICE ID' },
+    { field: 'role', headerText: 'ROLE' }
     // { field: 'actions', title: 'ACTION' }
 ]
-
-fetchAllUsers()
+onMounted(async () => {
+    await fetchAllUsers()
+})
 </script>
 
 <template>
     <div v-if="!loading">
-        <CustomDataTable :cols="columns" :componentToRender="AddNewAccounts" :isLoading="loading"
-                         :rows="users"
-                         title="User accounts" />
-
+        <CustomSyncfusionTable
+            :cols="columns"
+            :componentToRender="AddNewAccounts"
+            :data="users"
+            :isLoading="loading"
+            title="User accounts"
+        />
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

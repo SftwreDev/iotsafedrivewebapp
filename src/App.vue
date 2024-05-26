@@ -9,7 +9,8 @@ export default {
             isAuthenticated: false,
             isLoading: false,
             isStaff: '',
-            isSuperUser: ''
+            isSuperUser: '',
+            role: localStorage.getItem('role')
         }
     },
 
@@ -50,8 +51,6 @@ export default {
                 // router.push('/')
             }
         }
-
-
     },
 
     async mounted() {
@@ -81,23 +80,41 @@ export default {
 
         // This will open permission popup
         navigator.geolocation.getCurrentPosition(success, error)
-
     }
 }
 </script>
 <script setup>
 // import { RouterLink, RouterView } from 'vue-router'
 import Layout from './components/Layout.vue'
+import UserLayout from '@/components/UserLayout.vue'
 import LoadingSpinner from './components/utils/LoadingSpinner.vue'
 </script>
 
 <template>
-
     <LoadingSpinner :isLoading="isLoading" />
-    <Layout v-if="isAuthenticated">
-        <RouterView />
-    </Layout>
+    <div v-if="role === 'super_admin' || role === 'rescuer'">
+        <Layout v-if="isAuthenticated">
+            <RouterView />
+        </Layout>
+    </div>
+    <div v-if="role === 'user'">
+        <UserLayout v-if="isAuthenticated">
+            <RouterView />
+        </UserLayout>
+    </div>
     <RouterView v-else />
 </template>
 
 <style scoped></style>
+
+<style>
+@import '../node_modules/@syncfusion/ej2-base/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-buttons/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-calendars/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-dropdowns/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-inputs/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-navigations/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-popups/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-splitbuttons/styles/tailwind.css';
+@import '../node_modules/@syncfusion/ej2-vue-grids/styles/tailwind.css';
+</style>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
@@ -14,22 +14,22 @@ import CustomErrorAlerts from '@/components/alerts/CustomErrorAlerts.vue'
 import CustomSuccessAlerts from '@/components/alerts/CustomSuccessAlerts.vue'
 import CustomDataTableActionsRescuers from '@/components/tables/CustomDataTableActionsRescuers.vue'
 
+import CustomSyncfusionTable from '@/components/tables/CustomSyncfusionTable.vue'
+
 const { histories, loading } = storeToRefs(usePendingActivityHistoriesStore())
 const { fetchPendingActivityHistories } = usePendingActivityHistoriesStore()
 
 const { forwarded_accidents, faLoading } = storeToRefs(useForwardedAccidentStore())
 const { fetchForwardedAccidents } = useForwardedAccidentStore()
 
-
 const columns = [
-    { field: 'time_stamps', title: 'TIME STAMPS' },
-    { field: 'owner', title: 'USER' },
-    { field: 'location', title: 'LOCATION' },
-    { field: 'latitude', title: 'LATITUDE' },
-    { field: 'longitude', title: 'LONGITUDE' },
-    { field: 'status_report', title: 'STATUS REPORT' },
-    { field: 'status', title: 'STATUS' },
-    { field: 'actions', title: 'ACTIONS' }
+    { field: 'time_stamps', headerText: 'TIME STAMPS' },
+    { field: 'owner', headerText: 'USER' },
+    { field: 'location', headerText: 'LOCATION' },
+    { field: 'latitude', headerText: 'LATITUDE' },
+    { field: 'longitude', headerText: 'LONGITUDE' },
+    { field: 'status_report', headerText: 'STATUS REPORT' },
+    { field: 'status', headerText: 'STATUS' }
 ]
 
 const faColumns = [
@@ -65,7 +65,11 @@ function showPassword() {
     var new_password = document.getElementById('new_password')
     var confirm_password = document.getElementById('confirm_password')
 
-    if (current_password.type === 'password' || new_password.type === 'password' || confirm_password.type === 'password') {
+    if (
+        current_password.type === 'password' ||
+        new_password.type === 'password' ||
+        confirm_password.type === 'password'
+    ) {
         current_password.type = 'text'
         new_password.type = 'text'
         confirm_password.type = 'text'
@@ -76,16 +80,14 @@ function showPassword() {
     }
 }
 
-
 function checkIfPasswordMatch() {
     isPasswordMatch.value = new_password.value === confirm_password.value
 }
 
 async function apiUpdatePassword() {
-
     const payload = {
-        'current_password': current_password.value,
-        'new_password': new_password.value
+        current_password: current_password.value,
+        new_password: new_password.value
     }
     try {
         const resp = await fetch(`${BASE_URL}/api/update-temporary-password`, {
@@ -100,7 +102,6 @@ async function apiUpdatePassword() {
     }
 }
 
-
 async function saveBtn() {
     isLoading.value = true
     try {
@@ -114,7 +115,6 @@ async function saveBtn() {
             setTimeout(() => {
                 window.location.href = '/'
             }, 2000)
-
         } else {
             isLoading.value = false
             isSuccess.value = false
@@ -128,11 +128,9 @@ async function saveBtn() {
     }
 }
 
-
 async function fetchIsPasswordChangedApi() {
     isPasswordChangedLoading.value = true
     try {
-
         const resp = await fetch(`${BASE_URL}/api/actor/is-password-changed`, {
             method: 'GET',
             headers: {
@@ -152,101 +150,152 @@ async function fetchIsPasswordChangedApi() {
     }
 }
 
-
-fetchIsPasswordChangedApi()
+onMounted(async () => {
+    await fetchIsPasswordChangedApi()
+})
 </script>
-
 
 <template>
     <div v-if="!loading">
-
         <div v-if="!isPasswordChangedLoading">
-            <TransitionRoot :show="!open " as="template">
+            <TransitionRoot :show="!open" as="template">
                 <Dialog as="div" class="relative z-10">
-                    <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0"
-                                     enter-to="opacity-100" leave="ease-in duration-200" leave-from="opacity-100"
-                                     leave-to="opacity-0">
+                    <TransitionChild
+                        as="template"
+                        enter="ease-out duration-300"
+                        enter-from="opacity-0"
+                        enter-to="opacity-100"
+                        leave="ease-in duration-200"
+                        leave-from="opacity-100"
+                        leave-to="opacity-0"
+                    >
                         <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                     </TransitionChild>
 
                     <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
-                        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                            <TransitionChild as="template" enter="ease-out duration-300"
-                                             enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                                             enter-to="opacity-100 translate-y-0 sm:scale-100"
-                                             leave="ease-in duration-200"
-                                             leave-from="opacity-100 translate-y-0 sm:scale-100"
-                                             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+                        <div
+                            class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+                        >
+                            <TransitionChild
+                                as="template"
+                                enter="ease-out duration-300"
+                                enter-from="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                enter-to="opacity-100 translate-y-0 sm:scale-100"
+                                leave="ease-in duration-200"
+                                leave-from="opacity-100 translate-y-0 sm:scale-100"
+                                leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                            >
                                 <DialogPanel
-                                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                                    class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+                                >
                                     <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                                         <div class="sm:flex sm:items-start">
                                             <div
-                                                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                                <ExclamationTriangleIcon aria-hidden="true"
-                                                                         class="h-6 w-6 text-red-600" />
+                                                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+                                            >
+                                                <ExclamationTriangleIcon
+                                                    aria-hidden="true"
+                                                    class="h-6 w-6 text-red-600"
+                                                />
                                             </div>
-                                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                                                <DialogTitle as="h3"
-                                                             class="text-base font-semibold leading-6 text-gray-900">
+                                            <div
+                                                class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left"
+                                            >
+                                                <DialogTitle
+                                                    as="h3"
+                                                    class="text-base font-semibold leading-6 text-gray-900"
+                                                >
                                                     Update password
                                                 </DialogTitle>
                                                 <div class="mt-2">
-                                                    <p class="text-sm text-gray-500">You're still using your temporary
-                                                        password. Please update it now to continue using this
-                                                        application</p>
+                                                    <p class="text-sm text-gray-500">
+                                                        You're still using your temporary password.
+                                                        Please update it now to continue using this
+                                                        application
+                                                    </p>
 
-                                                    <form class="gap-y-5 mt-5 border-t border-gray-200"
-                                                          @submit.prevent="saveBtn">
+                                                    <form
+                                                        class="gap-y-5 mt-5 border-t border-gray-200"
+                                                        @submit.prevent="saveBtn"
+                                                    >
                                                         <label
                                                             class="mt-5 block text-sm font-medium leading-6 text-gray-900"
-                                                            for="current_password">Current password</label>
+                                                            for="current_password"
+                                                            >Current password</label
+                                                        >
                                                         <div class="mt-2">
-                                                            <input id="current_password" v-model="current_password"
-                                                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                                   name="current_password"
-                                                                   required
-                                                                   type="password" />
+                                                            <input
+                                                                id="current_password"
+                                                                v-model="current_password"
+                                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                name="current_password"
+                                                                required
+                                                                type="password"
+                                                            />
                                                         </div>
 
                                                         <label
                                                             class="mt-5 block text-sm font-medium leading-6 text-gray-900"
-                                                            for="new_password">New password</label>
+                                                            for="new_password"
+                                                            >New password</label
+                                                        >
                                                         <div class="mt-2">
-                                                            <input id="new_password" v-model="new_password"
-                                                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                                   name="new_password"
-                                                                   required
-                                                                   type="password" />
+                                                            <input
+                                                                id="new_password"
+                                                                v-model="new_password"
+                                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                name="new_password"
+                                                                required
+                                                                type="password"
+                                                            />
                                                         </div>
 
                                                         <label
                                                             class="mt-5 block text-sm font-medium leading-6 text-gray-900"
-                                                            for="confirm_password">Confirm password</label>
+                                                            for="confirm_password"
+                                                            >Confirm password</label
+                                                        >
                                                         <div class="mt-2">
-                                                            <input id="confirm_password" v-model="confirm_password"
-                                                                   class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                                                   name="confirm_password"
-                                                                   required
-                                                                   type="password"
-                                                                   @change="checkIfPasswordMatch" />
+                                                            <input
+                                                                id="confirm_password"
+                                                                v-model="confirm_password"
+                                                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                                                name="confirm_password"
+                                                                required
+                                                                type="password"
+                                                                @change="checkIfPasswordMatch"
+                                                            />
                                                         </div>
-                                                        <div v-if="!isPasswordMatch" class="rounded-md bg-red-50 p-4">
+                                                        <div
+                                                            v-if="!isPasswordMatch"
+                                                            class="rounded-md bg-red-50 p-4"
+                                                        >
                                                             <div class="flex">
                                                                 <div class="flex-shrink-0">
-                                                                    <XCircleIcon aria-hidden="true"
-                                                                                 class="h-5 w-5 text-red-400" />
+                                                                    <XCircleIcon
+                                                                        aria-hidden="true"
+                                                                        class="h-5 w-5 text-red-400"
+                                                                    />
                                                                 </div>
                                                                 <div class="ml-3">
-                                                                    <h3 class="text-sm font-medium text-red-800">
-                                                                        New and confirm password doesn't match
+                                                                    <h3
+                                                                        class="text-sm font-medium text-red-800"
+                                                                    >
+                                                                        New and confirm password
+                                                                        doesn't match
                                                                     </h3>
                                                                 </div>
                                                             </div>
                                                         </div>
 
-                                                        <CustomSuccessAlerts v-if="isSuccess" :content="content" />
-                                                        <CustomErrorAlerts v-if="isError" :content="content" />
+                                                        <CustomSuccessAlerts
+                                                            v-if="isSuccess"
+                                                            :content="content"
+                                                        />
+                                                        <CustomErrorAlerts
+                                                            v-if="isError"
+                                                            :content="content"
+                                                        />
 
                                                         <div class="flex items-center mt-5">
                                                             <input
@@ -259,7 +308,7 @@ fetchIsPasswordChangedApi()
                                                             <label
                                                                 class="ml-3 block text-sm leading-6 text-gray-900"
                                                                 for="remember-me"
-                                                            >Show password</label
+                                                                >Show password</label
                                                             >
                                                         </div>
 
@@ -267,7 +316,10 @@ fetchIsPasswordChangedApi()
                                                             class="my-5 flex w-full gap-x-2 justify-center rounded-md bg-custom-bg-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-custom-bg-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-custom-bg-600"
                                                             type="submit"
                                                         >
-                                                            <div v-if="isLoading" class="spinner"></div>
+                                                            <div
+                                                                v-if="isLoading"
+                                                                class="spinner"
+                                                            ></div>
                                                             Update password
                                                         </button>
                                                     </form>
@@ -284,15 +336,21 @@ fetchIsPasswordChangedApi()
         </div>
 
         <div v-if="role === 'super_admin'">
-            <CustomDataTableActions :cols="columns" :isLoading="loading"
-                                    :rows="histories"
-                                    title="Dashboard" />
+            <CustomSyncfusionTable
+                :cols="columns"
+                :data="histories"
+                :isLoading="loading"
+                title="Dashboard Table"
+            />
         </div>
 
         <div v-if="role === 'rescuer'">
-            <CustomDataTableActionsRescuers :cols="faColumns" :isLoading="faLoading"
-                                            :rows="forwarded_accidents"
-                                            title="Dashboard" />
+            <CustomDataTableActionsRescuers
+                :cols="faColumns"
+                :isLoading="faLoading"
+                :rows="forwarded_accidents"
+                title="Dashboard"
+            />
         </div>
     </div>
 </template>
@@ -301,8 +359,9 @@ fetchIsPasswordChangedApi()
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: radial-gradient(farthest-side, #ffff 94%, #0000) top/3.8px 3.8px no-repeat,
-    conic-gradient(#0000 30%, #ffff);
+    background:
+        radial-gradient(farthest-side, #ffff 94%, #0000) top/3.8px 3.8px no-repeat,
+        conic-gradient(#0000 30%, #ffff);
     -webkit-mask: radial-gradient(farthest-side, #0000 calc(100% - 3.8px), #000 0);
     animation: spinner-c7wet2 1s infinite linear;
 }
