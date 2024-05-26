@@ -16,8 +16,7 @@ const columns = [
     { field: 'latitude', headerText: 'LATITUDE' },
     { field: 'longitude', headerText: 'LONGITUDE' },
     { field: 'status_report', headerText: 'STATUS REPORT' },
-    { field: 'status', headerText: 'STATUS' },
-    { field: 'actions', headerText: 'ACTIONS' }
+    { field: 'status', headerText: 'STATUS' }
 ]
 
 onMounted(async () => {
