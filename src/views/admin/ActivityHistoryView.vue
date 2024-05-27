@@ -10,7 +10,7 @@ const { histories, loading } = storeToRefs(useAllActivityHistoriesStore())
 const { fetchAllActivityHistories } = useAllActivityHistoriesStore()
 
 const columns = [
-    { field: 'time_stamps', headerText: 'DATE & TIME' },
+    { field: 'timestamps', headerText: 'DATE & TIME' },
     { field: 'owner', headerText: 'USER' },
     { field: 'device_id', headerText: 'DEVICE ID' },
     { field: 'location', headerText: 'LOCATION' },
