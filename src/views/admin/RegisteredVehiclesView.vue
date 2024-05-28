@@ -15,9 +15,10 @@ const columns = [
     { field: 'year_model', headerText: 'YEAR MODEL' },
     { field: 'plate_no', headerText: 'PLATE #' }
 ]
-onMounted(async () => {
-    await fetchAllVehicle()
-})
+// onMounted(async () => {
+//     await fetchAllVehicle()
+// })
+fetchAllVehicle()
 </script>
 
 <template>

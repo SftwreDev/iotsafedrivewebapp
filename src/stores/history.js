@@ -3,7 +3,7 @@ import BASE_URL from '@/constants.js'
 
 const access_token = localStorage.getItem('access_token')
 export const useAllActivityHistoriesStore = defineStore({
-    id: 'vehicle',
+    id: 'histories',
     state: () => ({
         histories: [],
         loading: true
@@ -76,7 +76,8 @@ export const useDetailedActivityHistoriesStore = defineStore({
         center: {}
     }),
     actions: {
-        async fetchDetailedActivityHistories(id) { // Accept 'id' as a parameter
+        async fetchDetailedActivityHistories(id) {
+            // Accept 'id' as a parameter
             try {
                 this.loading = true
                 const resp = await fetch(`${BASE_URL}/api/activity-history?id=${id}`, {
@@ -88,7 +89,10 @@ export const useDetailedActivityHistoriesStore = defineStore({
                 const data = await resp.json()
                 if (data.status_code === 200) {
                     this.histories = data['data']
-                    this.center = { lat: data['data'][0]['latitude'], lng: data['data'][0]['longitude'] }
+                    this.center = {
+                        lat: data['data'][0]['latitude'],
+                        lng: data['data'][0]['longitude']
+                    }
                     console.log('this.histories', this.histories)
                     this.loading = true
                 } else {
@@ -102,7 +106,6 @@ export const useDetailedActivityHistoriesStore = defineStore({
         }
     }
 })
-
 
 export const useLatestActivityHistoriesStore = defineStore({
     id: 'latest_accident',
@@ -130,7 +133,6 @@ export const useLatestActivityHistoriesStore = defineStore({
         }
     }
 })
-
 
 export const useForwardedAccidentStore = defineStore({
     id: 'forwarded_accidents',
